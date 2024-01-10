@@ -8,6 +8,8 @@ const hidePurchased = ref(false)
 const shoppingItems = ref([
   { id: id++, text: 'Apples', purchased: true },
   { id: id++, text: 'Oranges', purchased: true },
+  { id: id++, text: 'Onions', purchased: false },
+  { id: id++, text: 'Milk', purchased: false },
   { id: id++, text: 'Lemons', purchased: false }
 ])
 
@@ -28,7 +30,7 @@ function removeShoppingItem(item) {
 </script>
 
 <template>
-  
+
   <div>
     <h1>My Shopping List:</h1>
   </div>
