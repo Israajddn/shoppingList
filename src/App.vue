@@ -1,47 +1,82 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref, computed } from 'vue'
+
+let id = 0
+
+const newShoppingItem = ref('')
+const hidePurchased = ref(false)
+const shoppingItems = ref([
+  { id: id++, text: 'Apples', purchased: true },
+  { id: id++, text: 'Oranges', purchased: true },
+  { id: id++, text: 'Lemons', purchased: false }
+])
+
+const filteredShoppingItems = computed(() => {
+  return hidePurchased.value
+    ? shoppingItems.value.filter((t) => !t.purchased)
+    : shoppingItems.value
+})
+
+function addShoppingItem() {
+  shoppingItems.value.push({ id: id++, text: newShoppingItem.value, purchased: false })
+  newShoppingItem.value = ''
+}
+
+function removeShoppingItem(item) {
+  shoppingItems.value = shoppingItems.value.filter((t) => t !== item)
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  
+  <div>
+    <h1>My Shopping List:</h1>
+  </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <div>
+    <form @submit.prevent="addShoppingItem">
+      <input v-model="newShoppingItem">
+      <button>Add to the Shopping List</button>
+    </form>
+  </div>
 
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <ul>
+      <li v-for="item in filteredShoppingItems" :key="item.id">
+        <input type="checkbox" v-model="item.purchased">
+        <span :class="{ purchased: item.purchased }">{{ item.text }}</span>
+        <button @click="removeShoppingItem(item)">remove</button>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <button @click="hidePurchased = !hidePurchased">
+    {{ hidePurchased ? 'Show all' : 'Hide completed' }}
+  </button>
+  </div>
+ 
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+.purchased {
+  /* text-decoration: line-through; */
+  color: #f6bd60;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+body {
+  background-color: #f7ede2;
+  color: #000814;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+h1 {
+  color: #84a59d;
 }
-</style>
+
+button {
+  background-color: #f5cac3;
+}
+
+ul {
+  list-style: none;
+}</style>
